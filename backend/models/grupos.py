@@ -15,3 +15,4 @@ class Grupos(Base):
 
     # Relaciones
     carrera = relationship("Carreras", back_populates="grupos")
+    grupo_tutor = relationship("GrupoTutor", back_populates="grupos")

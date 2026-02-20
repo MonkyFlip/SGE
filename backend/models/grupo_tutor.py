@@ -1,6 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.ext.declarative import relationship
-from datetime import date
 from base import Base
 
 class GrupoTutor(Base):
@@ -12,3 +11,5 @@ class GrupoTutor(Base):
     tutor_id = Column(Integer, ForeignKey("tutores.id_tutor"), nullable=False)
 
     # Relaciones
+    grupos = relationship("Grupos", back_populates="grupo_tutor")
+    tutores = relationship("Tutores", back_populates="grupo_tutor")

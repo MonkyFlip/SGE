@@ -14,3 +14,6 @@ class Tutores(Base):
 
     # Relaciones
     usuario = relationship("Usuarios", back_populates="tutores")
+    grupo_tutor = relationship("GrupoTutor", back_populates="tutores")
+    tutorias = relationship("Tutorias", back_populates="tutor")
+    soli_psicopedagogia = relationship("SoliPsicopedagogia", back_populates="tutor")

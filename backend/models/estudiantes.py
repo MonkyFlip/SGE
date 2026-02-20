@@ -17,3 +17,6 @@ class Estudiantes(Base):
     usuario = relationship("Usuarios", back_populates="estudiantes")
     genero = relationship("Genero", back_populates="estudiantes")
     seguro_med = relationship("SeguroME", back_populates="seguro_est")
+    estudiante_grupo = relationship("EstudianteGrupo", back_populates="estudiantes")
+    tutorias = relationship("Tutorias", back_populates="estudiante")
+    soli_psicopedagogia = relationship("SoliPsicopedagogia", back_populates="estudiante")
