@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
-from sqlalchemy.ext.declarative import relationship
-from base import Base
+from sqlalchemy.orm import relationship
+from database import Base
 
-class SeguroME(Base):
+class SeguroEstudiante(Base):
     __tablename__ = 'seguro_estudiante'
 
     # Campos principales
@@ -14,5 +14,5 @@ class SeguroME(Base):
     clinica = Column(String(15), unique=True, nullable=False)
 
     # Relacion
-    seguro_est = relationship("SeguroM", back_populates="seguro_med")
+    seguro_est = relationship("SeguroMedico", back_populates="seguro_med")
     estudiantes = relationship("Estudiantes", back_populates="seguro_est")

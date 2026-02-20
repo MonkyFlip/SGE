@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
-from sqlalchemy.ext.declarative import relationship
+from sqlalchemy.orm import relationship
 from datetime import datetime
-from base import Base
+from database import Base
 
 class SoliPsicopedagogia(Base):
     __tablename__ = 'soli_psicopedagogia'

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
-from sqlalchemy.ext.declarative import relationship
-from base import Base
+from sqlalchemy.orm import relationship
+from database import Base
 
 class Estudiantes(Base):
     __tablename__ = 'estudiantes'
@@ -16,7 +16,7 @@ class Estudiantes(Base):
     # Relaciones
     usuario = relationship("Usuarios", back_populates="estudiantes")
     genero = relationship("Genero", back_populates="estudiantes")
-    seguro_med = relationship("SeguroME", back_populates="seguro_est")
+    seguro_med = relationship("SeguroMedico", back_populates="seguro_est")
     estudiante_grupo = relationship("EstudianteGrupo", back_populates="estudiantes")
     tutorias = relationship("Tutorias", back_populates="estudiante")
     soli_psicopedagogia = relationship("SoliPsicopedagogia", back_populates="estudiante")

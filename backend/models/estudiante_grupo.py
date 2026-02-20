@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey
-from sqlalchemy.ext.declarative import relationship
-from base import Base
+from sqlalchemy.orm import relationship
+from database import Base
 
 class EstudianteGrupo(Base):
     __tablename__ = 'estudiante_grupo'

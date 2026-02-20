@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import relationship
-from base import Base
+from sqlalchemy.orm import relationship
+from database import Base
 
 class Genero(Base):
     __tablename__ = 'genero'

@@ -1,17 +1,17 @@
-from sqlalchemy import Column, Integer, String, Boolean
-from sqlalchemy.ext.declarative import relationship
+from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy.orm import relationship
 from datetime import date
-from base import Base
+from database import Base
 
-class PeriodoE(Base):
+class PeriodoEscolar(Base):
     __tablename__ = 'periodo_escolar'
 
     # Campos principales
     id_periodo = Column(Integer, primary_key=True, autoincrement=True)
 
     alias = Column(String(50), unique=True, nullable=False)
-    inicio = Column(date.now(), nullable=False)
-    fin = Column(date.now(), nullable=False)
+    inicio = Column(DateTime, nullable=False)
+    fin = Column(DateTime, nullable=False)
     activo = Column(Boolean, default=False)
 
     # Relaciones
