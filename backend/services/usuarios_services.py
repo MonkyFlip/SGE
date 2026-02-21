@@ -1,0 +1,76 @@
+from datetime import datetime
+from passlib.context import CryptContext
+from models.usuarios import Usuarios
+from repository.usuarios_repository import UsuariosRepository
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+class UsuariosService:
+
+    def __init__(self, repo: UsuariosRepository):
+        self.repo = repo
+
+    # Crear usuario
+    def crear_usuario(self, data: dict) -> Usuarios:
+        # Regla de negocio: email único
+        if self.repo.existe_email(data["email"]):
+            raise ValueError("El correo ya está registrado")
+
+        # Encriptar contraseña
+        hashed_password = self._hash_password(data["password"])
+
+        usuario = Usuarios(
+            rol_id=data["rol_id"],
+            nombre=data["nombre"],
+            apellido_paterno=data["apellido_paterno"],
+            apellido_materno=data["apellido_materno"],
+            email=data["email"],
+            password=hashed_password,
+            email_verified=False,
+            created_at=datetime.utcnow()
+        )
+
+        return self.repo.crear(usuario)
+
+    # Obtener usuario por ID
+    def obtener_usuario(self, usuario_id: int) -> Usuarios:
+        usuario = self.repo.obtener_por_id(usuario_id)
+        if not usuario:
+            raise ValueError("Usuario no encontrado")
+        return usuario
+
+    # Listar usuarios
+    def listar_usuarios(self) -> list[Usuarios]:
+        return self.repo.listar()
+
+    # Actualizar usuario
+    def actualizar_usuario(self, usuario_id: int, data: dict) -> Usuarios:
+        usuario = self.obtener_usuario(usuario_id)
+
+        # Actualizar solo campos permitidos
+        for campo, valor in data.items():
+            if campo == "password":
+                valor = self._hash_password(valor)
+            setattr(usuario, campo, valor)
+
+        usuario.updated_at = datetime.utcnow()
+
+        return self.repo.actualizar(usuario)
+
+    # Eliminar usuario
+    def eliminar_usuario(self, usuario_id: int):
+        usuario = self.obtener_usuario(usuario_id)
+        self.repo.eliminar(usuario)
+
+    # Verificar email
+    def verificar_email(self, usuario_id: int):
+        usuario = self.obtener_usuario(usuario_id)
+        usuario.email_verified = True
+        usuario.email_verified_at = datetime.utcnow()
+        return self.repo.actualizar(usuario)
+
+    # Utilidades internas
+    def _hash_password(self, password: str) -> str:
+        return pwd_context.hash(password)
