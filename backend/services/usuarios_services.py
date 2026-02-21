@@ -29,7 +29,7 @@ class UsuariosService:
             email=data["email"],
             password=hashed_password,
             email_verified=False,
-            created_at=datetime.utcnow()
+            created_at=datetime.now(datetime.timezone.utc)
         )
 
         return self.repo.crear(usuario)

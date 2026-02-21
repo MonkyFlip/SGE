@@ -21,6 +21,15 @@ class RolesRepository:
         .first()
         )
     
+    # Verificar si rol existe
+    def existe_rol(self, nombre: str) -> bool:
+        return(
+            self.db.query(Roles.id_rol)
+            .filter(Roles.nombre == nombre)
+            .first()
+            is not None
+        )
+
     # Listar roles
     def listar(self) -> list[Roles]:
         return self.db.query(Roles).all()
