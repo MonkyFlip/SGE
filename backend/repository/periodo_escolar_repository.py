@@ -35,3 +35,17 @@ class PeriodoEscolarRepository:
     def eliminar(self, periodo: PeriodoEscolar) -> None:
         self.db.delete(periodo)
         self.db.commit()
+
+    def existe_alias(self, alias: str) -> bool:
+        return (
+            self.db.query(PeriodoEscolar.id_periodo)
+            .filter(PeriodoEscolar.alias == alias)
+            .first()
+            is not None
+        )
+
+    def desactivar_periodos_activos(self):
+        self.db.query(PeriodoEscolar).filter(
+            PeriodoEscolar.activo == True
+        ).update({"activo": False})
+        self.db.commit()

@@ -1,6 +1,7 @@
 from models.tutores import Tutores
 from repository.tutores_repository import TutoresRepository
 
+
 class TutoresService:
     
     def __init__(self, repo: TutoresRepository):
@@ -36,16 +37,19 @@ class TutoresService:
     def actualizar_tutor(self, tutor_id: int, data: dict) -> Tutores:
         tutor = self.obtener_tutor(tutor_id)
 
-        # Campos permitidos para actualizar
         campos_permitidos = {
             "clave_sp",
             "telefono",
             "activo"
         }
 
-        # Regla de negocio: clave_sp única (si se intenta cambiar)
+        # Validar cambio de clave_sp
         if "clave_sp" in data:
-            if self.repo.existente_clave_sp(data["clave_sp"]):
+            nueva_clave = data["clave_sp"]
+            if (
+                nueva_clave != tutor.clave_sp
+                and self.repo.existente_clave_sp(nueva_clave)
+            ):
                 raise ValueError("La clave SP ya está registrada")
 
         for campo, valor in data.items():

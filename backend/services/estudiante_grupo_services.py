@@ -1,6 +1,7 @@
 from models.estudiante_grupo import EstudianteGrupo
 from repository.estudiante_grupo_repository import EstudianteGrupoRepository
 
+
 class EstudianteGrupoService:
 
     def __init__(self, repo: EstudianteGrupoRepository):
@@ -8,16 +9,14 @@ class EstudianteGrupoService:
 
     # Asignar estudiante a grupo
     def crear_estudiante_grupo(self, data: dict) -> EstudianteGrupo:
-        # Regla de negocio: evitar duplicados activos
-        if self.repo.existe_estudiante_grupo(
-            data["estudiante_id"],
-            data["grupo_id"]
-        ):
-            raise ValueError("El estudiante ya está asignado a este grupo")
+        # Regla de negocio: un estudiante solo puede tener un grupo activo
+        if self.repo.existe_grupo_activo_estudiante(data["estudiante_id"]):
+            raise ValueError("El estudiante ya tiene un grupo activo")
 
         estudiante_grupo = EstudianteGrupo(
             estudiante_id=data["estudiante_id"],
             grupo_id=data["grupo_id"],
+            activo=True
         )
 
         return self.repo.crear(estudiante_grupo)
@@ -29,11 +28,16 @@ class EstudianteGrupoService:
             raise ValueError("Asignación estudiante–grupo no encontrada")
         return estudiante_grupo
 
-    # Listar historial de asignaciones
+    # Listar historial completo de asignaciones
     def listar_estudiantes_grupos(self) -> list[EstudianteGrupo]:
         return self.repo.listar()
 
-    # Eliminar asignación (opcional)
-    def eliminar_estudiante_grupo(self, est_grupo_id: int):
+    # Cerrar asignación (baja lógica)
+    def cerrar_estudiante_grupo(self, est_grupo_id: int) -> EstudianteGrupo:
         estudiante_grupo = self.obtener_estudiante_grupo(est_grupo_id)
-        self.repo.eliminar(estudiante_grupo)
+
+        if not estudiante_grupo.activo:
+            raise ValueError("La asignación ya está cerrada")
+
+        estudiante_grupo.activo = False
+        return self.repo.actualizar(estudiante_grupo)

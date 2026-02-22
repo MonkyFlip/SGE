@@ -1,6 +1,6 @@
-from datetime import datetime
 from models.soli_psicopedagogia import SoliPsicopedagogia
 from repository.soli_psicopedagogia_repository import SoliPsicopedagogiaRepository
+
 
 class SoliPsicopedagogiaService:
 

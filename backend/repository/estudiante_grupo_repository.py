@@ -6,14 +6,14 @@ class EstudianteGrupoRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    # Crear estudiante_grupo
+    # Crear asignación
     def crear(self, estudiante_grupo: EstudianteGrupo) -> EstudianteGrupo:
         self.db.add(estudiante_grupo)
         self.db.commit()
         self.db.refresh(estudiante_grupo)
         return estudiante_grupo
     
-    # Obtner por ID
+    # Obtener por ID
     def obtener_por_id(self, est_grupo_id: int) -> EstudianteGrupo | None:
         return (
             self.db.query(EstudianteGrupo)
@@ -21,31 +21,29 @@ class EstudianteGrupoRepository:
             .first()
         )
     
-    # Listar estudiante_grupo
+    # Listar historial completo
     def listar(self) -> list[EstudianteGrupo]:
         return self.db.query(EstudianteGrupo).all()
 
-    # Eliminar estudiante_grupo
-    def eliminar(self, estudiante_grupo: EstudianteGrupo) -> None:
-        self.db.delete(estudiante_grupo)
+    # Actualizar asignación
+    def actualizar(self, estudiante_grupo: EstudianteGrupo) -> EstudianteGrupo:
         self.db.commit()
+        self.db.refresh(estudiante_grupo)
+        return estudiante_grupo
 
-    # Obtener por estudiante y grupo
-    def obtener_por_estudiante_grupo(
-        self,
-        estudiante_id: int,
-        grupo_id: int
-    ) -> EstudianteGrupo | None:
+    # Verificar si el estudiante ya tiene grupo activo
+    def existe_grupo_activo_estudiante(self, estudiante_id: int) -> bool:
         return (
-            self.db.query(EstudianteGrupo)
+            self.db.query(EstudianteGrupo.id_est_grupo)
             .filter(
                 EstudianteGrupo.estudiante_id == estudiante_id,
-                EstudianteGrupo.grupo_id == grupo_id
+                EstudianteGrupo.activo == True
             )
             .first()
+            is not None
         )
 
-    # Verificar si ya existe relación estudiante-grupo
+    # Verificar duplicado exacto (histórico)
     def existe_estudiante_grupo(self, estudiante_id: int, grupo_id: int) -> bool:
         return (
             self.db.query(EstudianteGrupo.id_est_grupo)

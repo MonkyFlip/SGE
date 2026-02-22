@@ -1,6 +1,7 @@
 from models.grupos import Grupos
 from repository.grupos_repository import GruposRepository
 
+
 class GrupoService:
 
     def __init__(self, repo: GruposRepository):
@@ -8,6 +9,10 @@ class GrupoService:
 
     # Crear grupo
     def crear_grupo(self, data: dict) -> Grupos:
+        # Regla de negocio: nombre único por carrera
+        if self.repo.existe_grupo(data["carrera_id"], data["nombre"]):
+            raise ValueError("Ya existe un grupo con ese nombre en la carrera")
+
         grupo = Grupos(
             carrera_id=data["carrera_id"],
             nombre=data["nombre"],
@@ -30,15 +35,19 @@ class GrupoService:
     def actualizar_grupo(self, grupo_id: int, data: dict) -> Grupos:
         grupo = self.obtener_grupo(grupo_id)
 
-        # Campos permitidos para actualizar
-        campos_permitidos = {
-            "nombre",
-            "activo"
-        }
+        # Validar cambio de nombre
+        if "nombre" in data:
+            nuevo_nombre = data["nombre"]
+            if (
+                nuevo_nombre != grupo.nombre
+                and self.repo.existe_grupo(grupo.carrera_id, nuevo_nombre)
+            ):
+                raise ValueError("Ya existe un grupo con ese nombre en la carrera")
+            grupo.nombre = nuevo_nombre
 
-        for campo, valor in data.items():
-            if campo in campos_permitidos:
-                setattr(grupo, campo, valor)
+        # Activar / desactivar grupo
+        if "activo" in data:
+            grupo.activo = data["activo"]
 
         return self.repo.actualizar(grupo)
 

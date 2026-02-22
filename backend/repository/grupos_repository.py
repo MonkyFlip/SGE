@@ -35,3 +35,14 @@ class GruposRepository:
     def eliminar(self, grupos: Grupos) -> None:
         self.db.delete(grupos)
         self.db.commit()
+
+    def existe_grupo(self, carrera_id: int, nombre: str) -> bool:
+        return (
+            self.db.query(Grupos.id_grupo)
+            .filter(
+                Grupos.carrera_id == carrera_id,
+                Grupos.nombre == nombre
+            )
+            .first()
+            is not None
+        )

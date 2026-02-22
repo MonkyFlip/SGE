@@ -35,3 +35,11 @@ class GrupoTutorRepository:
     def eliminar(self, grupo_tutor: GrupoTutor) -> None:
         self.db.delete(grupo_tutor)
         self.db.commit()
+
+    def existe_tutor_en_grupo(self, grupo_id: int) -> bool:
+        return (
+            self.db.query(GrupoTutor.id_grupo_tutor)
+            .filter(GrupoTutor.grupo_id == grupo_id)
+            .first()
+            is not None
+        )

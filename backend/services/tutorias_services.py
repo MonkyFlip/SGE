@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from models.tutorias import Tutorias
 from repository.tutorias_repository import TutoriasRepository
+
 
 class TutoriasService:
 
@@ -48,8 +49,7 @@ class TutoriasService:
             if campo in campos_permitidos:
                 setattr(tutoria, campo, valor)
 
-        # Si quieres manejar updated_at:
-        tutoria.updated_at = datetime.utcnow()
+        tutoria.updated_at = datetime.now(timezone.utc)
 
         return self.repo.actualizar(tutoria)
 

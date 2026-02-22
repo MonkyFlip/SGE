@@ -1,6 +1,7 @@
 from models.seguro_estudiante import SeguroEstudiante
 from repository.seguro_estudiante_repository import SeguroEstudianteRepository
 
+
 class SeguroEstudianteService:
 
     def __init__(self, repo: SeguroEstudianteRepository):
@@ -8,9 +9,9 @@ class SeguroEstudianteService:
 
     # Asignar seguro médico a estudiante
     def asignar_seguro(self, data: dict) -> SeguroEstudiante:
-        # Regla de negocio: un solo seguro por estudiante
-        if self.repo.existe_seguro_estudiante(data["estudiante_id"]):
-            raise ValueError("El estudiante ya tiene un seguro asignado")
+        # Regla de negocio: un solo seguro activo por estudiante
+        if self.repo.existe_seguro_activo(data["estudiante_id"]):
+            raise ValueError("El estudiante ya tiene un seguro activo")
 
         seguro_estudiante = SeguroEstudiante(
             seguro_med_id=data["seguro_med_id"],
@@ -26,7 +27,7 @@ class SeguroEstudianteService:
     def obtener_seguro_estudiante(self, seguro_est_id: int) -> SeguroEstudiante:
         seguro_estudiante = self.repo.obtener_por_id(seguro_est_id)
         if not seguro_estudiante:
-            raise ValueError("Seguro–Estudiante no encontrado")
+            raise ValueError("Seguro de Estudiante no encontrado")
         return seguro_estudiante
     
     # Listar seguros-estudiante
@@ -37,7 +38,6 @@ class SeguroEstudianteService:
     def actualizar_seguro_estudiante(self, seguro_est_id: int, data: dict) -> SeguroEstudiante:
         seguro_estudiante = self.obtener_seguro_estudiante(seguro_est_id)
 
-        # Campos permitidos
         campos_permitidos = {
             "nss",
             "estatus",

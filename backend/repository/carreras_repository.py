@@ -6,14 +6,12 @@ class CarrerasRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    # Crear carrera
     def crear(self, carrera: Carreras) -> Carreras:
         self.db.add(carrera)
         self.db.commit()
         self.db.refresh(carrera)
         return carrera
     
-    # Obtener por ID
     def obtener_por_id(self, carrera_id: int) -> Carreras | None:
         return (
             self.db.query(Carreras)
@@ -21,7 +19,7 @@ class CarrerasRepository:
             .first()
         )
     
-    # Verificar si existe carrera por periodo y alias
+    # Alias único por periodo
     def existe_carrera(self, periodo_id: int, alias: str) -> bool:
         return (
             self.db.query(Carreras.id_carrera)
@@ -33,17 +31,10 @@ class CarrerasRepository:
             is not None
         )
 
-    # Listar carreras
     def listar(self) -> list[Carreras]:
         return self.db.query(Carreras).all()
 
-    # Actualizar carrera
     def actualizar(self, carrera: Carreras) -> Carreras:
         self.db.commit()
         self.db.refresh(carrera)
         return carrera
-
-    # Eliminar carrera
-    def eliminar(self, carrera: Carreras) -> None:
-        self.db.delete(carrera)
-        self.db.commit()
