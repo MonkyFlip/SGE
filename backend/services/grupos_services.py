@@ -8,14 +8,11 @@ class GrupoService:
 
     # Crear grupo
     def crear_grupo(self, data: dict) -> Grupos:
-        # Regla de negocio: grupo unico
-
         grupo = Grupos(
             carrera_id=data["carrera_id"],
             nombre=data["nombre"],
-            activo=data["activo"],
+            activo=data.get("activo", True),
         )
-
         return self.repo.crear(grupo)
     
     # Obtener grupo por ID
@@ -33,7 +30,15 @@ class GrupoService:
     def actualizar_grupo(self, grupo_id: int, data: dict) -> Grupos:
         grupo = self.obtener_grupo(grupo_id)
 
-        # Actualizar solo campos permitidos
+        # Campos permitidos para actualizar
+        campos_permitidos = {
+            "nombre",
+            "activo"
+        }
+
+        for campo, valor in data.items():
+            if campo in campos_permitidos:
+                setattr(grupo, campo, valor)
 
         return self.repo.actualizar(grupo)
 

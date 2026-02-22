@@ -13,7 +13,7 @@ class CarrerasRepository:
         self.db.refresh(carrera)
         return carrera
     
-    # Obtner por ID
+    # Obtener por ID
     def obtener_por_id(self, carrera_id: int) -> Carreras | None:
         return (
             self.db.query(Carreras)
@@ -21,7 +21,19 @@ class CarrerasRepository:
             .first()
         )
     
-    # Listar carrera
+    # Verificar si existe carrera por periodo y alias
+    def existe_carrera(self, periodo_id: int, alias: str) -> bool:
+        return (
+            self.db.query(Carreras.id_carrera)
+            .filter(
+                Carreras.periodo_id == periodo_id,
+                Carreras.alias == alias
+            )
+            .first()
+            is not None
+        )
+
+    # Listar carreras
     def listar(self) -> list[Carreras]:
         return self.db.query(Carreras).all()
 

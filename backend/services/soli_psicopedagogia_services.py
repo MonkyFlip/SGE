@@ -9,7 +9,6 @@ class SoliPsicopedagogiaService:
 
     # Crear solicitud
     def crear_solicitud(self, data: dict) -> SoliPsicopedagogia:
-
         solicitud = SoliPsicopedagogia(
             tutor_id=data["tutor_id"],
             estudiante_id=data["estudiante_id"],
@@ -18,25 +17,43 @@ class SoliPsicopedagogiaService:
             tipo_servicio=data["tipo_servicio"],
             quien_canaliza=data["quien_canaliza"],
             motivo=data["motivo"],
-            observaciones=data["observaciones"],
+            observaciones=data.get("observaciones"),
             estado=data["estado"],
-            archivo_pdf=data["archivo_pdf"],
+            archivo_pdf=data.get("archivo_pdf"),
         )
-
         return self.repo.crear(solicitud)
     
     # Obtener solicitud por ID
     def obtener_solicitud(self, solicitud_id: int) -> SoliPsicopedagogia:
         solicitud = self.repo.obtener_por_id(solicitud_id)
         if not solicitud:
-            raise ValueError("Solcitud no encontrada")
+            raise ValueError("Solicitud no encontrada")
         return solicitud
     
     # Listar solicitudes
     def listar_solicitudes(self) -> list[SoliPsicopedagogia]:
         return self.repo.listar()
     
-    # Actualizar solicitud (pendiente)
+    # Actualizar solicitud
+    def actualizar_solicitud(self, solicitud_id: int, data: dict) -> SoliPsicopedagogia:
+        solicitud = self.obtener_solicitud(solicitud_id)
+
+        # Campos permitidos para actualizar
+        campos_permitidos = {
+            "fecha_lugar",
+            "tipo_servicio",
+            "quien_canaliza",
+            "motivo",
+            "observaciones",
+            "estado",
+            "archivo_pdf"
+        }
+
+        for campo, valor in data.items():
+            if campo in campos_permitidos:
+                setattr(solicitud, campo, valor)
+
+        return self.repo.actualizar(solicitud)
 
     # Eliminar solicitud
     def eliminar_solicitud(self, solicitud_id: int):

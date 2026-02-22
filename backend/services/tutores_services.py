@@ -7,14 +7,14 @@ class TutoresService:
         self.repo = repo
 
     # Crear tutor
-    def crear_tutor(self, data:dict) -> Tutores:
+    def crear_tutor(self, data: dict) -> Tutores:
         # Regla de negocio: clave_sp única
         if self.repo.existente_clave_sp(data["clave_sp"]):
             raise ValueError("La clave SP ya está registrada")
         
         tutor = Tutores(
             usuario_id=data["usuario_id"],
-            clave_so=data["clave_sp"],
+            clave_sp=data["clave_sp"],
             telefono=data.get("telefono"),
             activo=data.get("activo", True)
         )
@@ -36,9 +36,21 @@ class TutoresService:
     def actualizar_tutor(self, tutor_id: int, data: dict) -> Tutores:
         tutor = self.obtener_tutor(tutor_id)
 
-        # Actualizar solo campos permitidos
+        # Campos permitidos para actualizar
+        campos_permitidos = {
+            "clave_sp",
+            "telefono",
+            "activo"
+        }
+
+        # Regla de negocio: clave_sp única (si se intenta cambiar)
+        if "clave_sp" in data:
+            if self.repo.existente_clave_sp(data["clave_sp"]):
+                raise ValueError("La clave SP ya está registrada")
+
         for campo, valor in data.items():
-            setattr(tutor, campo, valor)
+            if campo in campos_permitidos:
+                setattr(tutor, campo, valor)
 
         return self.repo.actualizar(tutor)
     

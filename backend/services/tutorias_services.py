@@ -35,11 +35,24 @@ class TutoriasService:
     def actualizar_tutoria(self, tutoria_id: int, data: dict) -> Tutorias:
         tutoria = self.obtener_tutoria(tutoria_id)
 
+        # Campos permitidos para actualizar
+        campos_permitidos = {
+            "fecha",
+            "canalizado",
+            "descripcion",
+            "acciones",
+            "tipo"
+        }
+
         for campo, valor in data.items():
-            setattr(tutoria, campo, valor)
+            if campo in campos_permitidos:
+                setattr(tutoria, campo, valor)
+
+        # Si quieres manejar updated_at:
+        tutoria.updated_at = datetime.utcnow()
 
         return self.repo.actualizar(tutoria)
-    
+
     # Eliminar tutoría
     def eliminar_tutoria(self, tutoria_id: int) -> None:
         tutoria = self.obtener_tutoria(tutoria_id)

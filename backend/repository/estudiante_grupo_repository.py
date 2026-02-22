@@ -25,13 +25,34 @@ class EstudianteGrupoRepository:
     def listar(self) -> list[EstudianteGrupo]:
         return self.db.query(EstudianteGrupo).all()
 
-    # Actualizar estudiante_grupo
-    def actualizar(self, estudiante_grupo: EstudianteGrupo) -> EstudianteGrupo:
-        self.db.commit()
-        self.db.refresh(estudiante_grupo)
-        return estudiante_grupo
-
     # Eliminar estudiante_grupo
     def eliminar(self, estudiante_grupo: EstudianteGrupo) -> None:
         self.db.delete(estudiante_grupo)
         self.db.commit()
+
+    # Obtener por estudiante y grupo
+    def obtener_por_estudiante_grupo(
+        self,
+        estudiante_id: int,
+        grupo_id: int
+    ) -> EstudianteGrupo | None:
+        return (
+            self.db.query(EstudianteGrupo)
+            .filter(
+                EstudianteGrupo.estudiante_id == estudiante_id,
+                EstudianteGrupo.grupo_id == grupo_id
+            )
+            .first()
+        )
+
+    # Verificar si ya existe relación estudiante-grupo
+    def existe_estudiante_grupo(self, estudiante_id: int, grupo_id: int) -> bool:
+        return (
+            self.db.query(EstudianteGrupo.id_est_grupo)
+            .filter(
+                EstudianteGrupo.estudiante_id == estudiante_id,
+                EstudianteGrupo.grupo_id == grupo_id
+            )
+            .first()
+            is not None
+        )

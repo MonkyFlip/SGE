@@ -8,21 +8,19 @@ class SeguroMedicoService:
 
     # Crear seguro medico
     def crear_seguro(self, data: dict) -> SeguroMedico:
-        # Regla de negocio: seguro único
         if self.repo.existente_seguro(data["nombre"]):
-            raise ValueError("El seguro medico ya está registrado")
-        
+            raise ValueError("El seguro médico ya está registrado")
+
         seguro = SeguroMedico(
             nombre=data["nombre"]
         )
-
         return self.repo.crear(seguro)
     
-    # Obtner seguro por ID
+    # Obtener seguro por ID
     def obtener_seguro(self, seguro_med_id: int) -> SeguroMedico:
         seguro = self.repo.obtener_por_id(seguro_med_id)
         if not seguro:
-            raise ValueError("Seguro Medico no encontrado")
+            raise ValueError("Seguro médico no encontrado")
         return seguro
     
     # Listar seguros
@@ -33,15 +31,22 @@ class SeguroMedicoService:
     def actualizar_seguro(self, seguro_med_id: int, data: dict) -> SeguroMedico:
         seguro = self.obtener_seguro(seguro_med_id)
 
-        # Actualizar campo nombre
-        for campo, valor in data.items():
-            if campo == "nombre":
-                valor = self.actualizar_seguro(valor)
-            setattr(seguro, campo, valor)
+        # Solo se permite actualizar el nombre
+        if "nombre" in data:
+            nuevo_nombre = data["nombre"]
 
-            return self.repo.actualizar(seguro)
+            # Validar unicidad si cambia el nombre
+            if (
+                nuevo_nombre != seguro.nombre
+                and self.repo.existente_seguro(nuevo_nombre)
+            ):
+                raise ValueError("El seguro médico ya está registrado")
+
+            seguro.nombre = nuevo_nombre
+
+        return self.repo.actualizar(seguro)
 
     # Eliminar seguro
-    def eliminar_seguro(self, seguro_med_id: int) -> SeguroMedico:
+    def eliminar_seguro(self, seguro_med_id: int) -> None:
         seguro = self.obtener_seguro(seguro_med_id)
-        return self.repo.eliminar(seguro)
+        self.repo.eliminar(seguro)

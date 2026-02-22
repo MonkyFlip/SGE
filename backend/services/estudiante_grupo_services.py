@@ -6,8 +6,14 @@ class EstudianteGrupoService:
     def __init__(self, repo: EstudianteGrupoRepository):
         self.repo = repo
 
-    # Crear estudiante
+    # Asignar estudiante a grupo
     def crear_estudiante_grupo(self, data: dict) -> EstudianteGrupo:
+        # Regla de negocio: evitar duplicados activos
+        if self.repo.existe_estudiante_grupo(
+            data["estudiante_id"],
+            data["grupo_id"]
+        ):
+            raise ValueError("El estudiante ya está asignado a este grupo")
 
         estudiante_grupo = EstudianteGrupo(
             estudiante_id=data["estudiante_id"],
@@ -16,25 +22,18 @@ class EstudianteGrupoService:
 
         return self.repo.crear(estudiante_grupo)
 
-    # Obtener estudiante_grupo por ID
+    # Obtener asignación por ID
     def obtener_estudiante_grupo(self, est_grupo_id: int) -> EstudianteGrupo:
         estudiante_grupo = self.repo.obtener_por_id(est_grupo_id)
         if not estudiante_grupo:
-            raise ValueError("studiante no encontrado")
+            raise ValueError("Asignación estudiante–grupo no encontrada")
         return estudiante_grupo
 
-    # Listar estudiantes
+    # Listar historial de asignaciones
     def listar_estudiantes_grupos(self) -> list[EstudianteGrupo]:
         return self.repo.listar()
 
-    # Actualizar estudiante
-    def actualizar_estudiante_grupo(self, est_grupo_id: int, data: dict) -> EstudianteGrupo:
-        estudiante_grupo = self.obtener_estudiante_grupo(est_grupo_id)
-
-        return self.repo.actualizar(estudiante_grupo)
-
-    # Eliminar estudiante
+    # Eliminar asignación (opcional)
     def eliminar_estudiante_grupo(self, est_grupo_id: int):
         estudiante_grupo = self.obtener_estudiante_grupo(est_grupo_id)
         self.repo.eliminar(estudiante_grupo)
-
