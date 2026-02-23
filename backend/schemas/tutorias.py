@@ -1,44 +1,38 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 
 # Base compartido
 class TutoriaBaseSchema(BaseModel):
     tutor_id: int
     estudiante_id: int
-    fecha: str
-    estado: str
-    canalizado: bool
+    fecha: datetime
+    canalizado: bool = False
     descripcion: Optional[str] = None
-    acciones: str
+    acciones: Optional[str] = None
     tipo: str
 
 
-# Crear tutoria
+# Crear tutoría
 class TutoriaCreateSchema(TutoriaBaseSchema):
-    tutor_id: int
-    estudiante_id: int
-    fecha: str
-    estado: str
-    canalizado: bool
-    descripcion: Optional[str] = None
-    acciones: str
-    tipo: str
+    pass
 
 
-# Actualizar tutoria
+# Actualizar tutoría (parcial)
 class TutoriaUpdateSchema(BaseModel):
-    fecha: str
-    estado: str
-    canalizado: bool
+    fecha: Optional[datetime] = None
+    estado: Optional[str] = None
+    canalizado: Optional[bool] = None
     descripcion: Optional[str] = None
-    acciones: str
-    tipo: str
+    acciones: Optional[str] = None
+    tipo: Optional[str] = None
 
 
 # Respuesta
 class TutoriaResponseSchema(TutoriaBaseSchema):
     id_tutoria: int
+    estado: str
 
     class Config:
         from_attributes = True

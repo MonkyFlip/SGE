@@ -1,28 +1,27 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 # Base compartido
 class GrupoTutorBaseSchema(BaseModel):
     grupo_id: int
     tutor_id: int
-    activo: bool
 
 
-# Crear GrupoTutor
+# Crear asignación grupo–tutor
 class GrupoTutorCreateSchema(GrupoTutorBaseSchema):
-    grupo_id: int
-    tutor_id: int
-    activo: bool
+    pass
 
 
-# Actualizar GrupoTutor
+# Actualizar asignación (parcial)
 class GrupoTutorUpdateSchema(BaseModel):
-    activo: bool
+    activo: Optional[bool] = None
 
 
 # Respuesta
 class GrupoTutorResponseSchema(GrupoTutorBaseSchema):
-    id_grupo: int
+    id_grupo_tutor: int
+    activo: bool
 
     class Config:
         from_attributes = True

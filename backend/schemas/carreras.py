@@ -4,27 +4,29 @@ from datetime import datetime
 
 
 # Base compartido
-class PeriodoEscolarBaseSchema(BaseModel):
+class CarrerasBaseSchema(BaseModel):
+    periodo_id: int
     alias: str
     inicio: datetime
     fin: datetime
 
 
-# Crear periodo escolar
-class PeriodoEscolarCreateSchema(PeriodoEscolarBaseSchema):
+# Crear carrera
+class CarrerasCreateSchema(CarrerasBaseSchema):
     pass
 
 
-# Actualizar periodo escolar (parcial)
-class PeriodoEscolarUpdateSchema(BaseModel):
+# Actualizar carrera (parcial)
+class CarrerasUpdateSchema(BaseModel):
+    alias: Optional[str] = None
     inicio: Optional[datetime] = None
     fin: Optional[datetime] = None
     activo: Optional[bool] = None
 
 
 # Respuesta
-class PeriodoEscolarResponseSchema(PeriodoEscolarBaseSchema):
-    id_periodo: int
+class CarrerasResponseSchema(CarrerasBaseSchema):
+    id_carrera: int
     activo: bool
 
     class Config:

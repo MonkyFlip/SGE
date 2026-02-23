@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 # Base compartido
@@ -7,29 +8,25 @@ class EstudiantesBaseSchema(BaseModel):
     genero_id: int
     matricula: str
     telefono: str
-    estado: str
 
 
-# Crear Estudiantes
+# Crear estudiante
 class EstudiantesCreateSchema(EstudiantesBaseSchema):
-    usuario_id: int
-    genero_id: int
-    matricula: str
-    telefono: str
-    estado: str
+    pass
 
 
-# Actualizar Estudiantes
+# Actualizar estudiante (parcial)
 class EstudiantesUpdateSchema(BaseModel):
-    genero_id: int  # Por si el chavo me sale raro
-    matricula: str  # Por si se comete un error
-    telefono: str
-    estado: str
+    genero_id: Optional[int] = None
+    matricula: Optional[str] = None
+    telefono: Optional[str] = None
+    estado: Optional[str] = None
 
 
 # Respuesta
 class EstudiantesResponseSchema(EstudiantesBaseSchema):
     id_estudiante: int
+    estado: str
 
     class Config:
         from_attributes = True

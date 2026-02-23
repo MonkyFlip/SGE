@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 # Base compartido
@@ -6,14 +7,14 @@ class SeguroMedicoBaseSchema(BaseModel):
     nombre: str
 
 
-# Crear SeguroMedico
+# Crear seguro médico
 class SeguroMedicoCreateSchema(SeguroMedicoBaseSchema):
-    nombre: str
+    pass
 
 
-# Actualizar SeguroMedico
+# Actualizar seguro médico (parcial)
 class SeguroMedicoUpdateSchema(BaseModel):
-    nombre: str
+    nombre: Optional[str] = None
 
 
 # Respuesta

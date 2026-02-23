@@ -1,32 +1,30 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 # Base compartido
 class TutorBaseSchema(BaseModel):
     usuario_id: int
-    clave_sp: str
-    telefono: str
-    estado: str
+    clave_sp: int
+    telefono: Optional[str] = None
 
 
-# Crear Tutor
+# Crear tutor
 class TutorCreateSchema(TutorBaseSchema):
-    usuario_id: int
-    clave_sp: str
-    telefono: str
-    estado: str
+    pass
 
 
-# Actualizar Tutor
+# Actualizar tutor (parcial)
 class TutorUpdateSchema(BaseModel):
-    clave_sp: str
-    telefono: str
-    estado: str
+    clave_sp: Optional[int] = None
+    telefono: Optional[str] = None
+    estado: Optional[str] = None
 
 
 # Respuesta
 class TutorResponseSchema(TutorBaseSchema):
     id_tutor: int
+    estado: str
 
     class Config:
         from_attributes = True
