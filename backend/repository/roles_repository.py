@@ -17,7 +17,7 @@ class RolesRepository:
     def obtener_por_id(self,rol_id: int) -> Roles:
         return(
         self.db.query(Roles)
-        .filter_by(Roles.id_rol == rol_id) # .filter()
+        .filter(Roles.id_rol == rol_id) # .filter()
         .first()
         )
     
