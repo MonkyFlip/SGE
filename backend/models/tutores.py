@@ -10,7 +10,7 @@ class Tutores(Base):
     usuario_id = Column(Integer, ForeignKey('usuarios.id_usuario'), nullable=False)
     clave_sp = Column(Integer, nullable=False, unique=True)
     telefono = Column(String(15), nullable=True, unique=True)
-    activo = Column(Boolean, default=True)
+    estado = Column(String(20), nullable=False, default="ACTIVO")
 
     # Relaciones
     usuario = relationship("Usuarios", back_populates="tutores")

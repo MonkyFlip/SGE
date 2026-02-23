@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 from database import Base
 
 class Usuarios(Base):
@@ -15,10 +15,11 @@ class Usuarios(Base):
     email = Column(String(150), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
     email_verified = Column(Boolean, default=False)
-
     email_verified_at = Column(DateTime, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
+    estado = Column(String(20), nullable=False, default="ACTIVO")
 
     rol = relationship("Roles", back_populates="usuario")
     tutores = relationship("Tutores", back_populates="usuario")

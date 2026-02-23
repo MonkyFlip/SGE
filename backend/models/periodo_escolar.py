@@ -9,9 +9,9 @@ class PeriodoEscolar(Base):
     # Campos principales
     id_periodo = Column(Integer, primary_key=True, autoincrement=True)
 
-    alias = Column(String(50), unique=True, nullable=False)
-    inicio = Column(DateTime, nullable=False)
-    fin = Column(DateTime, nullable=False)
+    alias = Column(String(50), nullable=False)
+    inicio = Column(DateTime(timezone=True), nullable=False)
+    fin = Column(DateTime(timezone=True), nullable=False)
     activo = Column(Boolean, default=False)
 
     # Relaciones

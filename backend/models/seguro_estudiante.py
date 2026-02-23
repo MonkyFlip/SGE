@@ -9,9 +9,10 @@ class SeguroEstudiante(Base):
     id_seguro_est = Column(Integer, primary_key=True, autoincrement=True)
     seguro_med_id = Column(Integer, ForeignKey('seguro_medico.id_seguro_med'), nullable=False)
     estudiante_id = Column(Integer, ForeignKey('estudiantes.id_estudiante'), nullable=False)
-    nss = Column(String(15), unique=True, nullable=False)
+    nss = Column(String(15), nullable=False)
     estatus = Column(Boolean, default=False)
-    clinica = Column(String(15), unique=True, nullable=False)
+    clinica = Column(String(50), nullable=False)
+    activo = Column(Boolean, nullable=False, default=True)
 
     # Relacion
     seguro_est = relationship("SeguroMedico", back_populates="seguro_med")

@@ -6,11 +6,11 @@ class Grupos(Base):
     __tablename__ = 'grupos'
 
     # Campos principales
-    id_grupo = Column(Integer, primary_key=True, nullable=False)
+    id_grupo = Column(Integer, primary_key=True, autoincrement=True)
     carrera_id = Column(Integer, ForeignKey("carrera.id_carrera"), nullable=False)
 
-    nombre = Column(String(50), unique=True, nullable=False)
-    activo = Column(Boolean, default=False)
+    nombre = Column(String(50), nullable=False)
+    activo = Column(Boolean, nullable=False, default=True)
 
     # Relaciones
     carrera = relationship("Carreras", back_populates="grupos")

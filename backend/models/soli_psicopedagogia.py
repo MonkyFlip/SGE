@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 from database import Base
 
 class SoliPsicopedagogia(Base):
@@ -9,9 +9,9 @@ class SoliPsicopedagogia(Base):
     # Campos principales
     id_solicitud = Column(Integer, primary_key=True, autoincrement=True)
     tutor_id = Column(Integer, ForeignKey('tutores.id_tutor'), nullable=False)
-
     estudiante_id = Column(Integer, ForeignKey('estudiantes.id_estudiante'), nullable=False)
-    fecha_soli = Column(String(20), default=datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"))
+
+    fecha_soli = Column(DateTime(timezone=True), nullable=False,default=lambda: datetime.now(timezone.utc))
     fecha_lugar = Column(String(100), nullable=False)
     tipo_servicio = Column(String(50), nullable=False)
     quien_canaliza = Column(String(100), nullable=False)
