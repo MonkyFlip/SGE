@@ -49,7 +49,7 @@ class TutoriasService:
             if campo in campos_permitidos:
                 setattr(tutoria, campo, valor)
 
-        tutoria.updated_at = datetime.now(timezone.utc)
+        # tutoria.updated_at = datetime.now(timezone.utc)
 
         return self.repo.actualizar(tutoria)
 
