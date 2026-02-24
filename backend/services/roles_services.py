@@ -54,4 +54,8 @@ class RolService:
     # Eliminar rol
     def eliminar_rol(self, rol_id: int):
         rol = self.obtener_rol(rol_id)
+
+        if rol.usuario:
+            raise ValueError("No se puede eliminar un rol asignado a usuarios")
+
         self.repo.eliminar(rol)
