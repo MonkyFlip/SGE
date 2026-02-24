@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.usuarios import Usuarios
 
+
 class UsuariosRepository:
 
     def __init__(self, db: Session):
@@ -48,7 +49,9 @@ class UsuariosRepository:
         self.db.refresh(usuario)
         return usuario
 
-    # Eliminar usuario
-    def eliminar(self, usuario: Usuarios) -> None:
-        self.db.delete(usuario)
+    # Eliminación lógica
+    def desactivar(self, usuario: Usuarios) -> Usuarios:
+        usuario.estado = "INACTIVO"
         self.db.commit()
+        self.db.refresh(usuario)
+        return usuario

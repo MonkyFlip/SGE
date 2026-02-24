@@ -15,7 +15,6 @@ class UsuariosService:
 
     # Crear usuario
     def crear_usuario(self, data: dict) -> Usuarios:
-        # Regla de negocio: email único
         if self.repo.existe_email(data["email"]):
             raise ValueError("El correo ya está registrado")
 
@@ -25,7 +24,7 @@ class UsuariosService:
             rol_id=data["rol_id"],
             nombre=data["nombre"],
             apellido_paterno=data["apellido_paterno"],
-            apellido_materno=data.get("apellido_materno"),
+            apellido_materno=data["apellido_materno"],
             email=data["email"],
             password=hashed_password,
             email_verified=False,
@@ -34,7 +33,7 @@ class UsuariosService:
 
         return self.repo.crear(usuario)
 
-    # Obtener usuario por ID
+    # Obtener usuario
     def obtener_usuario(self, usuario_id: int) -> Usuarios:
         usuario = self.repo.obtener_por_id(usuario_id)
         if not usuario:
@@ -49,7 +48,6 @@ class UsuariosService:
     def actualizar_usuario(self, usuario_id: int, data: dict) -> Usuarios:
         usuario = self.obtener_usuario(usuario_id)
 
-        # Campos permitidos para actualizar
         campos_permitidos = {
             "rol_id",
             "nombre",
@@ -69,13 +67,17 @@ class UsuariosService:
             setattr(usuario, campo, valor)
 
         usuario.updated_at = datetime.now(timezone.utc)
-
         return self.repo.actualizar(usuario)
 
-    # Eliminar usuario
-    def eliminar_usuario(self, usuario_id: int):
+    # Eliminación lógica
+    def eliminar_usuario(self, usuario_id: int) -> Usuarios:
         usuario = self.obtener_usuario(usuario_id)
-        self.repo.eliminar(usuario)
+
+        if usuario.estado == "INACTIVO":
+            raise ValueError("El usuario ya está inactivo")
+
+        usuario.updated_at = datetime.now(timezone.utc)
+        return self.repo.desactivar(usuario)
 
     # Verificar email
     def verificar_email(self, usuario_id: int) -> Usuarios:
@@ -84,6 +86,6 @@ class UsuariosService:
         usuario.email_verified_at = datetime.now(timezone.utc)
         return self.repo.actualizar(usuario)
 
-    # Utilidad interna: hash de contraseña
+    # Utilidad interna
     def _hash_password(self, password: str) -> str:
         return pwd_context.hash(password)
